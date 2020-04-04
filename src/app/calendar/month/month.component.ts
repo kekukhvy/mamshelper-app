@@ -40,7 +40,6 @@ export class MonthComponent implements OnInit {
   setLastDayOfMonth() {
     let date = new Date(this.currentYear, this.currentMonth.id + 1, 0);
     this.lastDayOfMonth = date.getDate();
-    console.log('>>' + this.lastDayOfMonth);
   }
 
   generateCalendar() {
@@ -51,8 +50,9 @@ export class MonthComponent implements OnInit {
   }
   generatePreviousMonth() {
     const firstDate = new Date(this.currentYear, this.currentMonth.id, 1);
-    if (firstDate.getDay() !== 0) {
-      for (let i = firstDate.getDay() - 1; i > 0; i--) {
+    const shift: number = firstDate.getDay() === 0 ? 6 : firstDate.getDay() -1;
+    if (firstDate.getDay() !== 1) {
+      for (let i = shift; i > 0; i--) {
         const date = new Date(firstDate);
         date.setDate(date.getDate() - i);
         const day: Day = this.generateDayWithDate(date);
