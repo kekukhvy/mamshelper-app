@@ -1,5 +1,5 @@
-mat-card {
-  width: 80%;
+.calendar {
+  width: 100%;
 }
 
 app-day {
@@ -67,4 +67,12 @@ mat-card {
 .tasks {
   height: 75%;
   width: 100%;
+}
+
+.grid{
+  width: 80%;
+}
+
+app-categories{
+  width: 18%;
 }

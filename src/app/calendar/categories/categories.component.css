@@ -1,0 +1,24 @@
+.categories {
+  margin: 10px;
+}
+
+.category-header {
+  text-align: center;
+}
+
+.category-body {
+  margin-top: 10px;
+}
+
+.category-color {
+  background-color: green;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  float: left;
+}
+
+.category-name{
+  margin-right: 10px;
+  float: left;
+}

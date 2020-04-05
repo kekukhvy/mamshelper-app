@@ -1,4 +1,4 @@
-<mat-card>
+<div class="calendar">
   <div
     class="calendar-header"
     fxLayout="row"
@@ -31,26 +31,36 @@
       </select>
     </mat-form-field>
   </div>
-  <div fxLayout="row wrap" fxLayoutAlign="start center" class="container">
-    <mat-card class="day-form" *ngFor="let day of days">
-      <div class="day-header"
-      [ngClass]="{'text-gray':day.date.getMonth() !== currentMonth.id}">
-        <div class="day-name">
-          {{ day.date.toLocaleString("ru-ru", { weekday: "long" }) }}
-        </div>
-        <div class="day-number" [ngClass]="{ circle: day.currentDate }">
-          {{ day.date.getDate() }}
-        </div>
-      </div>
-      <div class="tasks" fxLayout="column" fxLayoutAlign="space-evenly center">
+  <div fxLayout="row">
+    <div fxLayout="row wrap" fxLayoutAlign="start center" class="grid">
+      <mat-card class="day-form" *ngFor="let day of days">
         <div
-          class="task"
-          *ngFor="let task of day.tasks"
-          [ngClass]="'task-bg-' + task.category.color"
+          class="day-header"
+          [ngClass]="{ 'text-gray': day.date.getMonth() !== currentMonth.id }"
         >
-          {{ task.name }}
+          <div class="day-name">
+            {{ day.date.toLocaleString("ru-ru", { weekday: "long" }) }}
+          </div>
+          <div class="day-number" [ngClass]="{ circle: day.currentDate }">
+            {{ day.date.getDate() }}
+          </div>
         </div>
-      </div>
-    </mat-card>
+        <div
+          class="tasks"
+          fxLayout="column"
+          fxLayoutAlign="space-evenly center"
+        >
+          <div
+            class="task"
+            *ngFor="let task of day.tasks"
+            [ngClass]="'task-bg-' + task.category.color"
+          >
+            {{ task.name }}
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <app-categories></app-categories>
   </div>
-</mat-card>
+</div>
