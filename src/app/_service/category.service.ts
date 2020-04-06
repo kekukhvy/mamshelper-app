@@ -13,8 +13,20 @@ export class CategoryService {
     return [...this.categories];
   }
 
-  getCategoryUpdatedListener() {
+  public getCategoryUpdatedListener() {
     return this.categoriesUpdated.asObservable();
+  }
+
+  public addCategory(category: Category) {
+    category.id = Math.random() * 100 + '';
+    this.categories.push(category);
+    this.categoriesUpdated.next([...this.categories]);
+  }
+
+  public updateCategory(category: Category) {
+    let index = this.categories.findIndex(c => c.id === category.id);
+    this.categories[index] = category;
+    this.categoriesUpdated.next([...this.categories]);
   }
 
   public changeStatus(category: Category) {

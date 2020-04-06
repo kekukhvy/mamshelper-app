@@ -12,13 +12,26 @@
           class="category-color"
           [style.background-color]="category.color"
         ></div>
-        <div class="category-name">{{ category.name }}</div>
+        <div class="category-name" (click)="onEditCategory(category)">
+          {{ category.name }}
+        </div>
       </div>
 
       <mat-slide-toggle
-      [checked] = "category.checked"
-      color = "primary"
-      (change)="onChangeCategoryStatus(category, $event)"></mat-slide-toggle>
+        [checked]="category.checked"
+        color="primary"
+        (change)="onChangeCategoryStatus(category, $event)"
+      ></mat-slide-toggle>
     </div>
+  </div>
+  <div class="category-action">
+    <button
+      mat-button
+      mat-raised-button
+      color="primary"
+      (click)="onAddCategory()"
+    >
+      Add
+    </button>
   </div>
 </div>
