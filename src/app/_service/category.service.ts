@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Category } from '../_models/calendar/category.model';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +50,9 @@ export class CategoryService {
     categories.push(category2);
     categories.push(category3);
     return categories;
+  }
+
+  public getCategoryById(id: string) {
+    return this.categories.find(category => category.id === id);
   }
 }
