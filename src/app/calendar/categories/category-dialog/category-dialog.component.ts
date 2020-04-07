@@ -11,7 +11,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class CategoryDialogComponent implements OnInit {
   categoryForm: FormGroup;
   color = 'gray';
-  editMode: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<CategoryDialogComponent>,

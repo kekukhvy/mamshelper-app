@@ -38,7 +38,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   onAddCategory() {
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
-      width: '300px',
+      width: '240px',
       height: '400px'
     });
 
@@ -51,7 +51,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   onEditCategory(category: Category) {
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
-      width: '300px',
+      width: '240px',
       height: '400px',
       data: category
     });
@@ -61,5 +61,9 @@ export class CategoriesComponent implements OnInit, OnDestroy {
         this.categoryService.updateCategory(response);
       }
     });
+  }
+
+  onDeleteCategory(category) {
+    console.log(category);
   }
 }

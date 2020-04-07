@@ -4,7 +4,6 @@
     <div
       class="category-element"
       fxLayout="row"
-      fxLayoutAlign="space-between center"
       *ngFor="let category of categories"
     >
       <div>
@@ -16,12 +15,15 @@
           {{ category.name }}
         </div>
       </div>
-
+      <span class="spacer"></span>
       <mat-slide-toggle
         [checked]="category.checked"
         color="primary"
         (change)="onChangeCategoryStatus(category, $event)"
       ></mat-slide-toggle>
+      <a class="delete-btn" matTooltip="Delete" (click)="onDeleteCategory(category)">
+        <mat-icon color="warn">delete_forever</mat-icon>
+      </a>
     </div>
   </div>
   <div class="category-action">

@@ -18,7 +18,7 @@ export class CategoryService {
   }
 
   public addCategory(category: Category) {
-    category.id = Math.random() * 100 + '';
+    category.id = Math.round(Math.random() * 1000) + '';
     this.categories.push(category);
     this.categoriesUpdated.next([...this.categories]);
   }
