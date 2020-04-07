@@ -21,7 +21,11 @@
         color="primary"
         (change)="onChangeCategoryStatus(category, $event)"
       ></mat-slide-toggle>
-      <a class="delete-btn" matTooltip="Delete" (click)="onDeleteCategory(category)">
+      <a
+        class="delete-btn"
+        matTooltip="Delete"
+        (click)="onDeleteCategory(category.id)"
+      >
         <mat-icon color="warn">delete_forever</mat-icon>
       </a>
     </div>

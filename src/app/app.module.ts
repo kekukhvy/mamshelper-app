@@ -13,6 +13,7 @@ import { CategoriesComponent } from './calendar/categories/categories.component'
 import { CategoryDialogComponent } from './calendar/categories/category-dialog/category-dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     DayComponent,
     MonthComponent,
     CategoriesComponent,
-    CategoryDialogComponent
+    CategoryDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

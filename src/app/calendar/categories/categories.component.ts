@@ -5,6 +5,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
 import { Subscription, SubscriptionLike } from 'rxjs';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-categories',
@@ -63,7 +64,16 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDeleteCategory(category) {
-    console.log(category);
+  onDeleteCategory(categoryId) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: { message: 'Are you sure that you want to delete category?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.categoryService.deleteCategory(categoryId);
+      }
+    });
   }
 }

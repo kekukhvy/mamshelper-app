@@ -29,6 +29,12 @@ export class CategoryService {
     this.categoriesUpdated.next([...this.categories]);
   }
 
+  public deleteCategory(categoryId) {
+    let index = this.categories.findIndex(c => c.id === categoryId);
+    this.categories.splice(index, 1);
+    this.categoriesUpdated.next([...this.categories]);
+  }
+
   public changeStatus(category: Category) {
     let index = this.categories.findIndex(c => c.id === category.id);
     this.categories[index] = category;
