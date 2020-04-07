@@ -1,0 +1,38 @@
+.categories {
+  margin: 10px;
+}
+
+.category-header {
+  text-align: center;
+}
+
+.category-body {
+  margin-top: 10px;
+}
+
+.category-color {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  float: left;
+}
+
+.category-name {
+  margin-right: 10px;
+  float: left;
+  cursor: pointer;
+}
+
+.category-action {
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.delete-btn {
+  width: 15px;
+  cursor: pointer;
+}
+.spacer {
+  flex: 1 1 auto;
+}
