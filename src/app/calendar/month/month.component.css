@@ -1,5 +1,5 @@
-mat-card {
-  width: 80%;
+.calendar {
+  width: 100%;
 }
 
 app-day {
@@ -53,18 +53,15 @@ mat-card {
   padding-left: 5px;
 }
 
-.task-bg-green {
-  background-color: #5eb37e;
-}
-
-.task-bg-yellow {
-  background-color: #D7BA7D;
-}
-
-.task-bg-red {
-  background-color: #CD5A4B;
-}
 .tasks {
   height: 75%;
   width: 100%;
+}
+
+.grid{
+  width: 80%;
+}
+
+app-categories{
+  width: 18%;
 }

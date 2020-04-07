@@ -1,0 +1,36 @@
+<h1 mat-dialog-title style="text-align: center">Category</h1>
+
+<div mat-dialog-content>
+  <div
+    [formGroup]="categoryForm"
+    fxLayout="column"
+    fxLayoutAlign="center start"
+  >
+    <mat-form-field>
+      <input formControlName="id" matInput placeholder="Id" type="text" />
+    </mat-form-field>
+    <mat-form-field>
+      <input formControlName="name" matInput placeholder="Name" type="text"
+    /></mat-form-field>
+    <mat-form-field>
+      <input
+        formControlName="color"
+        matInput
+        placeholder="Color"
+        [(colorPicker)]="color"
+        [style.background]="color"
+    /></mat-form-field>
+    <mat-checkbox
+      formControlName="checked"
+      matInput
+      [checked]="true"
+      color="primary"
+      >is active?</mat-checkbox
+    >
+  </div>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-evenly center">
+  <button mat-button (click)="onSave()">Save</button>
+  <button mat-button color="accent" mat-dialog-close>Cancel</button>
+</div>

@@ -1,0 +1,43 @@
+<div class="categories">
+  <div class="category-header">Categories</div>
+  <div class="category-body">
+    <div
+      class="category-element"
+      fxLayout="row"
+      *ngFor="let category of categories"
+    >
+      <div>
+        <div
+          class="category-color"
+          [style.background-color]="category.color"
+        ></div>
+        <div class="category-name" (click)="onEditCategory(category)">
+          {{ category.name }}
+        </div>
+      </div>
+      <span class="spacer"></span>
+      <mat-slide-toggle
+        [checked]="category.checked"
+        color="primary"
+        (change)="onChangeCategoryStatus(category, $event)"
+      ></mat-slide-toggle>
+      <a
+        class="delete-btn"
+        matTooltip="Delete"
+        (click)="onDeleteCategory(category.id)"
+      >
+        <mat-icon color="warn">delete_forever</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div class="category-action">
+    <button
+      mat-button
+      mat-raised-button
+      color="primary"
+      (click)="onAddCategory()"
+    >
+      Add
+    </button>
+  </div>
+</div>
