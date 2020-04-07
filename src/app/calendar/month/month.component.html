@@ -55,7 +55,9 @@
             *ngFor="let task of day.tasks"
             [style.background-color]="task.category.color"
           >
-            <div *ngIf="task.category.checked">{{ task.name }}</div>
+            <div *ngIf="task.category.checked" (click)="openTask(task)">
+              {{ task.name }}
+            </div>
           </div>
         </div>
       </mat-card>

@@ -6,11 +6,13 @@ import { TaskService } from '../../_service/task.service';
 import { Category } from '../../_models/calendar/category.model';
 import { Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/_service/category.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 
 @Component({
   selector: 'app-month',
   templateUrl: './month.component.html',
-  styleUrls: ['./month.component.css']
+  styleUrls: ['./month.component.css'],
 })
 export class MonthComponent implements OnInit, OnDestroy {
   monthsList: Month[] = months;
@@ -21,9 +23,7 @@ export class MonthComponent implements OnInit, OnDestroy {
   days: Day[] = [];
   private categorySub: Subscription;
 
-  constructor(
-    private taskService: TaskService
-  ) {}
+  constructor(private taskService: TaskService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.setDefaultMonthAndYear();
@@ -81,7 +81,7 @@ export class MonthComponent implements OnInit, OnDestroy {
     let day: Day = {
       date: date,
       currentDate: false,
-      tasks: tasks
+      tasks: tasks,
     };
     return day;
   }
@@ -92,7 +92,7 @@ export class MonthComponent implements OnInit, OnDestroy {
     let day: Day = {
       date: date,
       currentDate: isCurrentDate,
-      tasks: tasks
+      tasks: tasks,
     };
     return day;
   }
@@ -113,5 +113,13 @@ export class MonthComponent implements OnInit, OnDestroy {
 
   onSelectYear() {
     this.generateCalendar();
+  }
+
+  openTask(task: Task) {
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
+      width: '400px',
+      height: '600px',
+      data: task,
+    });
   }
 }

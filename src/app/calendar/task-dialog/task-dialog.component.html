@@ -1,0 +1,22 @@
+<div [formGroup]="taskForm">
+  <mat-form-field class="task-name">
+    <input
+      formControlName="name"
+      matInput
+      placeholder="Name"
+      type="text"
+  /></mat-form-field>
+
+  <mat-form-field class="task-date">
+    <input formControlName="date" matInput placeholder="Date" type="date"
+  /></mat-form-field>
+
+  <mat-form-field>
+    <input
+      class="task-time"
+      formControlName="time"
+      matInput
+      placeholder="Time"
+      type="time"
+  /></mat-form-field>
+</div>
