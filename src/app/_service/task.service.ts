@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Task } from '../_models/calendar/task.model';
+import { Task, repeatabilityList } from '../_models/calendar/task.model';
 import { CategoryService } from './category.service';
 import { Category } from '../_models/calendar/category.model';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
   private tasks: Task[];
@@ -63,7 +63,8 @@ export class TaskService {
       description: 'Молочная каша',
       date: date,
       time: null,
-      category: category
+      repeatability: repeatabilityList[0],
+      category: category,
     };
 
     tasks.push(task);
@@ -79,7 +80,8 @@ export class TaskService {
       description: 'Заказать прививку в Драгобрате',
       date: date,
       time: null,
-      category: category
+      repeatability: repeatabilityList[0],
+      category: category,
     };
     tasks.push(task2);
     return tasks;
@@ -95,10 +97,15 @@ export class TaskService {
       description: 'Выбрать коляску на babycar.com',
       date: date,
       time: null,
-      category: category
+      repeatability: repeatabilityList[0],
+      category: category,
     };
 
     tasks.push(task3);
     return tasks;
+  }
+
+  saveTask(task) {
+    console.log(task, ' was saved into back');
   }
 }

@@ -118,8 +118,13 @@ export class MonthComponent implements OnInit, OnDestroy {
   openTask(task: Task) {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: '400px',
-      height: '600px',
+      height: '550px',
       data: task,
+      autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.taskService.saveTask(result);
     });
   }
 }

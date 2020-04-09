@@ -1,22 +1,78 @@
-<div [formGroup]="taskForm">
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-icon-button color="accent" aria-label="Delete" *ngIf="!isEdit">
+    <mat-icon>delete</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    color="primary"
+    aria-label="Edit"
+    (click)="onEdit()"
+    *ngIf="!isEdit"
+  >
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Close" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="taskForm">
   <mat-form-field class="task-name">
     <input
       formControlName="name"
       matInput
       placeholder="Name"
       type="text"
+      [disabled]="!isEdit"
   /></mat-form-field>
 
   <mat-form-field class="task-date">
     <input formControlName="date" matInput placeholder="Date" type="date"
   /></mat-form-field>
 
-  <mat-form-field>
-    <input
-      class="task-time"
-      formControlName="time"
-      matInput
-      placeholder="Time"
-      type="time"
+  <mat-form-field class="task-time">
+    <input formControlName="time" matInput placeholder="Time" type="time"
   /></mat-form-field>
-</div>
+  <mat-form-field>
+    <select
+      matNativeControl
+      formControlName="repeatability"
+      placeholder="Repeatability"
+    >
+      <option
+        *ngFor="let repeatability of repeatabilityList"
+        [ngValue]="repeatability"
+      >
+        {{ repeatability.value }}
+      </option>
+    </select>
+  </mat-form-field>
+  <mat-form-field>
+    <select
+      matNativeControl
+      required
+      formControlName="category"
+      placeholder="Category"
+    >
+      <option *ngFor="let category of categories" [ngValue]="category">{{
+        category.name
+      }}</option>
+    </select>
+  </mat-form-field>
+  <mat-form-field class="task-description" appearance="fill">
+    <textarea
+      matInput
+      formControlName="description"
+      placeholder="Description"
+      rows="6"
+    >
+    </textarea>
+  </mat-form-field>
+
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-evenly center">
+    <button mat-button (click)="onSave()" color="primary" *ngIf="isEdit">
+      Save
+    </button>
+  </div>
+</form>
