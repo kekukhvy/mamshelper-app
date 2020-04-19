@@ -15,6 +15,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { TaskDialogComponent } from './calendar/task-dialog/task-dialog.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { TaskDialogComponent } from './calendar/task-dialog/task-dialog.componen
     CategoriesComponent,
     CategoryDialogComponent,
     ConfirmDialogComponent,
-    TaskDialogComponent
+    TaskDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,12 +34,13 @@ import { TaskDialogComponent } from './calendar/task-dialog/task-dialog.componen
     NavigationModule,
     BrowserAnimationsModule,
     MaterialModule,
-    ColorPickerModule
+    ColorPickerModule,
+    HttpClientModule,
   ],
   providers: [
     // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CategoryDialogComponent]
+  entryComponents: [CategoryDialogComponent],
 })
 export class AppModule {}

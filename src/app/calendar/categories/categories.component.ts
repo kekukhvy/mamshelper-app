@@ -10,7 +10,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.css']
+  styleUrls: ['./categories.component.css'],
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
   public categories: Category[];
@@ -22,10 +22,10 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.categoryService.getCategories();
+    this.categoryService.getCategories();
     this.categorySub = this.categoryService
       .getCategoryUpdatedListener()
-      .subscribe(categories => (this.categories = categories));
+      .subscribe((categories) => (this.categories = categories));
   }
 
   ngOnDestroy() {
@@ -40,7 +40,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   onAddCategory() {
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
       width: '240px',
-      height: '400px'
+      height: '400px',
     });
 
     dialogRef.afterClosed().subscribe((response: Category) => {
@@ -54,7 +54,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
       width: '240px',
       height: '400px',
-      data: category
+      data: category,
     });
 
     dialogRef.afterClosed().subscribe((response: Category) => {
@@ -67,10 +67,10 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   onDeleteCategory(categoryId) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
-      data: { message: 'Are you sure that you want to delete category?' }
+      data: { message: 'Are you sure that you want to delete category?' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.categoryService.deleteCategory(categoryId);
       }

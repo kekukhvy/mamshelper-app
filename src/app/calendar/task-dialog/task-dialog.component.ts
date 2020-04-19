@@ -30,7 +30,11 @@ export class TaskDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.categories = this.categoryService.getCategories();
+    this.categoryService
+      .getCategoryUpdatedListener()
+      .subscribe((categories) => {
+        this.categories = categories;
+      });
   }
 
   get f() {

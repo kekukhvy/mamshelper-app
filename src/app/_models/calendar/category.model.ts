@@ -4,5 +4,4 @@ export class Category {
   name: string;
   color: string;
   checked?: boolean;
-  isHidden?: boolean;
 }
