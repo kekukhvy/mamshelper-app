@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const app = express();
 const testRoutes = require("./routes/test");
 const categoryRoutes = require("./routes/category");
+const taskRoutes = require("./routes/task");
 
 mongoose
   .connect(
@@ -34,5 +35,6 @@ app.use((req, res, next) => {
 
 app.use("/api/test", testRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/task", taskRoutes);
 
 module.exports = app;
