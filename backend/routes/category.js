@@ -39,7 +39,6 @@ router.put("/:id", (req, res, next) => {
 });
 
 router.delete("/:id", (req, res, next) => {
-  console.log(req.params.id);
   Category.deleteOne({ _id: req.params.id }).then((result) => {
     res.status(200).json({
       message: "Category was deleted",

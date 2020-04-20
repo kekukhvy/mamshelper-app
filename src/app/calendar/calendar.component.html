@@ -1,1 +1,47 @@
-<app-month></app-month>
+<div
+  class="calendar-header"
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  fxLayoutGap="30px"
+>
+  <mat-form-field>
+    <mat-label>Месяц</mat-label>
+    <select
+      matNativeControl
+      [(ngModel)]="selectedMonth"
+      required
+      (change)="onSelectMonth()"
+    >
+      <option *ngFor="let month of monthsList" [ngValue]="month">{{
+        month.name
+      }}</option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Год</mat-label>
+    <select
+      matNativeControl
+      required
+      (change)="onSelectYear()"
+      [(ngModel)]="selectedYear"
+    >
+      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+    </select>
+  </mat-form-field>
+</div>
+<div fxLayout="row">
+  <app-month></app-month>
+  <div class="side-bar" fxLayout="column" fxLayoutAlign="space-between none">
+    <app-categories></app-categories>
+    <div class="add-task">
+      <button
+        mat-fab
+        color="accent"
+        aria-label="Example icon button with a bookmark icon"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

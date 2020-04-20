@@ -1,42 +1,10 @@
 <div class="calendar">
-  <div
-    class="calendar-header"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayoutGap="30px"
-  >
-    <!-- <mat-form-field>
-      <mat-label>Месяц</mat-label>
-      <select
-        matNativeControl
-        [(ngModel)]="currentMonth"
-        required
-        (change)="onSelectMonth()"
-      >
-        <option *ngFor="let month of monthsList" [ngValue]="month">{{
-          month.name
-        }}</option>
-      </select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Год</mat-label>
-      <select
-        matNativeControl
-        required
-        (change)="onSelectYear()"
-        [(ngModel)]="currentYear"
-      >
-        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-      </select>
-    </mat-form-field>
-  </div>
   <div fxLayout="row">
     <div fxLayout="row wrap" fxLayoutAlign="start center" class="grid">
       <mat-card class="day-form" *ngFor="let day of days">
         <div
           class="day-header"
-          [ngClass]="{ 'text-gray': day.date.getMonth() !== currentMonth.id }"
+          [ngClass]="{ 'text-gray': day.date.getMonth() !== selectedMonth.id }"
         >
           <div class="day-name">
             {{ day.date.toLocaleString("ru-ru", { weekday: "long" }) }}
@@ -61,8 +29,6 @@
           </div>
         </div>
       </mat-card>
-    </div> -->
-
-    <app-categories></app-categories>
+    </div>
   </div>
 </div>

@@ -1,7 +1,20 @@
-mat-card {
-  width: 1300px;
+app-month {
+  width: 80%;
 }
 
-app-day{
-  margin: 3px;
+.add-task {
+  text-align: center;
+}
+.side-bar {
+  width: 18%;
+}
+
+.add-task {
+  position: fixed;
+  right: 9%;
+  bottom: 5%;
+}
+
+.calendar-header {
+  margin-top: 10px;
 }
