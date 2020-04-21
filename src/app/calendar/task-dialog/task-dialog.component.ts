@@ -47,7 +47,7 @@ export class TaskDialogComponent implements OnInit {
     if (this.taskData) {
       this.taskForm = this.fb.group({
         name: this.taskData.name,
-        date: dp.transform(this.taskData.date, format),
+        date: dp.transform(this.taskData.startDate, format),
         time: this.taskData.time,
         category: this.taskData.category,
         repeatability: this.taskData.repeatability,

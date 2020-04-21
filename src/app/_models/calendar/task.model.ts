@@ -5,7 +5,8 @@ export class Task {
   id: string;
   name: string;
   description: string;
-  date: Date;
+  startDate: Date;
+  endDate: Date;
   time: Time;
   repeatability: Repeatability;
   category: Category;

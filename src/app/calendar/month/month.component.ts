@@ -73,6 +73,9 @@ export class MonthComponent implements OnInit, OnDestroy {
   generateCalendar() {
     this.days = [];
     this.setLastDayOfMonth();
+    const firstDate: string =
+      this.selectedYear + '-' + this.selectedMonth.id + '-' + 1;
+    console.log(this.taskService.getTasksForMonth(firstDate));
     this.generatePreviousMonth();
     this.generateMonth();
   }
@@ -138,5 +141,9 @@ export class MonthComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       this.taskService.saveTask(result);
     });
+  }
+
+  test(){
+    console.log("TEST");
   }
 }

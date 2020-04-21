@@ -1,40 +1,31 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Category } from 'src/app/_models/calendar/category.model';
-import { CategoryService } from 'src/app/_service/category.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatDialog } from '@angular/material/dialog';
-import { CategoryDialogComponent } from './category-dialog/category-dialog.component';
-import { Subscription, SubscriptionLike } from 'rxjs';
-import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Category} from 'src/app/_models/calendar/category.model';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
+import {MatDialog} from '@angular/material/dialog';
+import {CategoryDialogComponent} from './category-dialog/category-dialog.component';
+import {ConfirmDialogComponent} from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
 })
-export class CategoriesComponent implements OnInit, OnDestroy {
-  public categories: Category[];
-  private categorySub: Subscription;
+export class CategoriesComponent {
+  @Input() public categories: Category[];
+
+  @Output() public addCategoryEvent = new EventEmitter<Category>();
+  @Output() public updateCategoryEvent = new EventEmitter<Category>();
+  @Output() public deleteCategoryEvent = new EventEmitter<string>();
+  @Output() public changeCategoryStatusEvent = new EventEmitter<Category>();
 
   constructor(
-    private categoryService: CategoryService,
     public dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
-    this.categoryService.getCategories();
-    this.categorySub = this.categoryService
-      .getCategoryUpdatedListener()
-      .subscribe((categories) => (this.categories = categories));
-  }
-
-  ngOnDestroy() {
-    this.categorySub.unsubscribe();
+  ) {
   }
 
   onChangeCategoryStatus(category: Category, event: MatSlideToggleChange) {
     category.checked = event.checked;
-    this.categoryService.changeStatus(category);
+    this.changeCategoryStatusEvent.emit(category);
   }
 
   onAddCategory() {
@@ -45,7 +36,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((response: Category) => {
       if (response) {
-        this.categoryService.addCategory(response);
+        this.addCategoryEvent.emit(response);
       }
     });
   }
@@ -59,7 +50,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((response: Category) => {
       if (response) {
-        this.categoryService.updateCategory(response);
+        this.updateCategoryEvent.emit(response);
       }
     });
   }
@@ -67,12 +58,12 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   onDeleteCategory(categoryId) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
-      data: { message: 'Are you sure that you want to delete category?' },
+      data: {message: 'Are you sure that you want to delete category?'},
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.categoryService.deleteCategory(categoryId);
+        this.deleteCategoryEvent.emit(categoryId);
       }
     });
   }
