@@ -3,8 +3,11 @@ import {Month, months} from '../_models/calendar/month.model';
 import {CalendarService} from '../_service/calendar.service';
 import {Category} from '../_models/calendar/category.model';
 import {CategoryService} from '../_service/category.service';
-import {getDefaultMonth, getDefaultYear, getYearsForSelector} from './calendar.util';
-import {take} from 'rxjs/operators';
+import {getDefaultMonth, getDefaultYear, getFirstDateOfMonth, getYearsForSelector} from './calendar.util';
+import {map, take} from 'rxjs/operators';
+import {TaskService} from '../_service/task.service';
+import {repeatabilityList, Task} from '../_models/calendar/task.model';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -12,24 +15,17 @@ import {take} from 'rxjs/operators';
   styleUrls: ['./calendar.component.css'],
 })
 export class CalendarComponent implements OnInit {
+  updateCalendarEvent = new Subject<void>();
 
-  public categories: Category[];
   selectedMonth: Month;
   monthsList: Month[] = months;
   selectedYear: number;
   years: number[] = [];
 
-  constructor(private calendarService: CalendarService,
-              private categoryService: CategoryService) {
+  constructor() {
   }
 
   ngOnInit() {
-    this.categoryService.getCategories()
-      .pipe(take(1))
-      .subscribe(categories => {
-        this.categories = categories;
-      });
-
     this.initVariables();
   }
 
@@ -39,45 +35,11 @@ export class CalendarComponent implements OnInit {
     this.years = getYearsForSelector(this.selectedYear);
   }
 
-  private getCategoryIndexById(categoryId): number {
-    return this.categories.findIndex((c) => c.id === categoryId);
-  }
-
   onSelectMonth() {
-    this.calendarService.changeMonth(this.selectedMonth);
+    this.updateCalendarEvent.next();
   }
 
   onSelectYear() {
-    this.calendarService.changeYear(this.selectedYear);
-  }
-
-  onAddCategory(category: Category) {
-    this.categoryService.addCategory(category)
-      .subscribe(result => {
-        category.id = result.categoryId;
-        this.categories.push(category);
-      });
-  }
-
-  onEditCategory(category: Category) {
-    this.categoryService.updateCategory(category)
-      .subscribe(result => {
-        const index = this.getCategoryIndexById(category.id);
-        this.categories[index] = category;
-      });
-  }
-
-  onDeleteCategory(categoryId) {
-    this.categoryService.deleteCategory(categoryId)
-      .subscribe(result => {
-        const index = this.getCategoryIndexById(categoryId);
-        this.categories.splice(index, 1);
-      });
-  }
-
-  onChangeCategoryStatus(category) {
-    const index = this.getCategoryIndexById(category.id);
-    this.categories[index].checked = category.checked;
-    console.log(this.categories);
+    this.updateCalendarEvent.next();
   }
 }

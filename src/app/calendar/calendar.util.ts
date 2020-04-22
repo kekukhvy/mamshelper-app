@@ -17,3 +17,12 @@ export const getDefaultYear = (): number => {
 export const getDefaultMonth = (): number => {
   return currentDate.getMonth();
 };
+
+export const getFirstDateOfMonth = (year: number, month: number): string => {
+  // return year + '-' + month + '-' + 1;
+  return '2020-04-01';
+};
+
+export const getLastDateOfMonth = (month: number, year: number): number => {
+  return new Date(year, month + 1, 0).getDate();
+};

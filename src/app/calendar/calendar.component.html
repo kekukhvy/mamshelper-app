@@ -9,7 +9,6 @@
     <select
       matNativeControl
       [(ngModel)]="selectedMonth"
-      required
       (change)="onSelectMonth()"
     >
       <option *ngFor="let month of monthsList" [ngValue]="month">{{
@@ -22,7 +21,6 @@
     <mat-label>Год</mat-label>
     <select
       matNativeControl
-      required
       (change)="onSelectYear()"
       [(ngModel)]="selectedYear"
     >
@@ -31,13 +29,15 @@
   </mat-form-field>
 </div>
 <div fxLayout="row">
-  <app-month></app-month>
+  <app-month [selectedMonth]="selectedMonth"
+             [selectedYear]="selectedYear"
+             [updateCalendarEvent]="updateCalendarEvent.asObservable()"
+
+  >
+
+  </app-month>
   <div class="side-bar" fxLayout="column" fxLayoutAlign="space-between none">
-    <app-categories [categories]="categories"
-                    (addCategoryEvent)="onAddCategory($event)"
-                    (updateCategoryEvent)="onEditCategory($event)"
-                    (deleteCategoryEvent)="onDeleteCategory($event)"
-                    (changeCategoryStatusEvent)="onChangeCategoryStatus($event)"
+    <app-categories
     ></app-categories>
     <div class="add-task">
       <button
