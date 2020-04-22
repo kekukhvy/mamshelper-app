@@ -53,13 +53,16 @@ export class CategoryService {
       .delete('http://localhost:3000/api/category/' + categoryId);
   }
 
-  public changeStatus(category: Category) {
-    let index = this.categories.findIndex((c) => c.id === category.id);
-    this.categories[index] = category;
-    this.categoriesUpdated.next([...this.categories]);
+  public setLoadedCategories(categories: Category[]) {
+    this.categories = categories;
+    this.categoriesUpdated.next(categories);
   }
 
-  public getCategoryById(id: string): Category {
-    return this.categories.find((category) => category.id === id);
+  private getCategoryIndexById(categoryId): number {
+    return this.categories.findIndex((c) => c.id === categoryId);
+  }
+
+  private getCategoryById(categoryId): Category {
+    return this.categories[this.getCategoryIndexById(categoryId)];
   }
 }
