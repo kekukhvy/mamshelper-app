@@ -1,81 +1,87 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Month, months } from '../../_models/calendar/month.model';
-import { Day } from '../../_models/calendar/day.model';
-import { Task } from '../../_models/calendar/task.model';
-import { TaskService } from '../../_service/task.service';
-import { MatDialog } from '@angular/material/dialog';
-import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
-import { CalendarService } from 'src/app/_service/calendar.service';
-import { Category } from 'src/app/_models/calendar/category.model';
-import { CategoryService } from 'src/app/_service/category.service';
-import { Subscription } from 'rxjs';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Month} from '../../_models/calendar/month.model';
+import {Day} from '../../_models/calendar/day.model';
+import {repeatabilityList, Task} from '../../_models/calendar/task.model';
+import {MatDialog} from '@angular/material/dialog';
+import {TaskDialogComponent} from '../task-dialog/task-dialog.component';
+import {Category} from 'src/app/_models/calendar/category.model';
+import {getFirstDateOfMonthISO, getLastDateOfMonth, isCurrentDate} from '../calendar.util';
+import {CategoryService} from '../../_service/category.service';
+import {Subscription} from 'rxjs';
+import {TaskService} from '../../_service/task.service';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-month',
   templateUrl: './month.component.html',
   styleUrls: ['./month.component.css'],
 })
-export class MonthComponent implements OnInit, OnDestroy {
-  private monthSubscription: Subscription;
-  private yearSubscription: Subscription;
-  private categorySubscription: Subscription;
+export class MonthComponent implements OnInit, OnDestroy, OnChanges {
+
+  @Input() selectedMonth: Month;
+  @Input() selectedYear: number;
+
+  private categorySub: Subscription;
+
+  private tasks: Task[];
+  private categories: Category[] = [];
   private lastDayOfMonth: number = 0;
 
-  monthsList: Month[] = months;
-  selectedMonth: Month;
-  selectedYear: number;
-  days: Day[] = [];
-  categories: Category[] = [];
+  public days: Day[] = [];
 
-  constructor(
-    private taskService: TaskService,
-    private calendarService: CalendarService,
-    private categoryService: CategoryService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private dialog: MatDialog,
+              private categoryService: CategoryService,
+              private taskService: TaskService) {
+  }
 
   ngOnInit(): void {
-    this.yearSubscription = this.calendarService
-      .getSelectedYear()
-      .subscribe((year) => {
-        this.selectedYear = year;
-        this.generateCalendar();
-      });
+    this.getCategories();
+  }
 
-    this.monthSubscription = this.calendarService
-      .getSelectedMonth()
-      .subscribe((month) => {
-        this.selectedMonth = month;
-        this.generateCalendar();
-      });
+  ngOnDestroy(): void {
+    this.categorySub.unsubscribe();
+  };
 
-    this.categorySubscription = this.categoryService
-      .getCategoryUpdatedListener()
-      .subscribe((categories) => {
-        this.categories = categories;
-      });
-
-    this.calendarService.setDefaultMonthAndYear();
+  ngOnChanges(changes: SimpleChanges): void {
     this.generateCalendar();
   }
 
-  ngOnDestroy() {
-    this.monthSubscription.unsubscribe();
-    this.yearSubscription.unsubscribe();
-    this.categorySubscription.unsubscribe();
+
+  private getCategories() {
+    this.categorySub = this.categoryService.getCategoryUpdatedListener()
+      .subscribe(categories => {
+        this.categories = categories;
+        this.getTasks();
+        console.log('Categories was updated');
+      });
   }
 
-  setLastDayOfMonth() {
-    let date = new Date(this.selectedYear, this.selectedMonth.id + 1, 0);
-    this.lastDayOfMonth = date.getDate();
+  private getTasks() {
+    const firstDateOfMonth = getFirstDateOfMonthISO(this.selectedMonth.id, this.selectedYear);
+    this.taskService.getTasksForMonth(firstDateOfMonth)
+      .pipe(
+        map((tasksData) => {
+          return tasksData.tasks.map((task) => {
+            return {
+              id: task._id,
+              name: task.name,
+              description: task.description,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              time: task.time,
+              repeatability: repeatabilityList[task.repeatability],
+              category: this.categoryService.getCategoryById(task.category)
+            };
+          });
+        })).subscribe(result => {
+      this.tasks = result;
+      console.log('tasks was updated', this.tasks);
+    });
   }
 
   generateCalendar() {
+    this.lastDayOfMonth = getLastDateOfMonth(this.selectedMonth.id, this.selectedYear);
     this.days = [];
-    this.setLastDayOfMonth();
-    const firstDate: string =
-      this.selectedYear + '-' + this.selectedMonth.id + '-' + 1;
-    console.log(this.taskService.getTasksForMonth(firstDate));
     this.generatePreviousMonth();
     this.generateMonth();
   }
@@ -87,8 +93,7 @@ export class MonthComponent implements OnInit, OnDestroy {
       for (let i = shift; i > 0; i--) {
         const date = new Date(firstDate);
         date.setDate(date.getDate() - i);
-        const day: Day = this.generateDayWithDate(date);
-        this.days.push(day);
+        this.days.push(this.generateDayOfPreviousMonth(date));
       }
     }
   }
@@ -99,36 +104,25 @@ export class MonthComponent implements OnInit, OnDestroy {
       this.days.push(day);
     }
   }
-  generateDayWithDate(date: Date): Day {
-    const tasks: Task[] = null; //this.taskService.getDayTasks(date);
-    let day: Day = {
+
+  generateDayOfPreviousMonth(date: Date): Day {
+    return {
       date: date,
       currentDate: false,
-      tasks: tasks,
+      tasks: null,
     };
-    return day;
-  }
-  generateDay(num): Day {
-    const date: Date = new Date(this.selectedYear, this.selectedMonth.id, num);
-    const isCurrentDate: boolean = this.isCurrentDate(date);
-    const tasks: Task[] = null; //this.taskService.getDayTasks(date);
-    let day: Day = {
-      date: date,
-      currentDate: isCurrentDate,
-      tasks: tasks,
-    };
-    return day;
   }
 
-  isCurrentDate(date: Date) {
-    let isCurrentDate: boolean;
-    const curDate = new Date();
-    isCurrentDate =
-      curDate.getDate() === date.getDate() &&
-      curDate.getMonth() === date.getMonth() &&
-      curDate.getFullYear() === date.getFullYear();
-    return isCurrentDate;
+  generateDay(num): Day {
+    const date: Date = new Date(this.selectedYear, this.selectedMonth.id, num);
+    const tasks: Task[] = null; //this.taskService.getDayTasks(date);
+    return {
+      date: date,
+      currentDate: isCurrentDate(date),
+      tasks: tasks,
+    };
   }
+
 
   openTask(task: Task) {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
@@ -139,11 +133,7 @@ export class MonthComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.taskService.saveTask(result);
+      //this.taskService.saveTask(result);
     });
-  }
-
-  test(){
-    console.log("TEST");
   }
 }

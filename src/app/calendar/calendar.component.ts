@@ -1,13 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Month, months} from '../_models/calendar/month.model';
-import {CalendarService} from '../_service/calendar.service';
-import {Category} from '../_models/calendar/category.model';
-import {CategoryService} from '../_service/category.service';
-import {getDefaultMonth, getDefaultYear, getFirstDateOfMonth, getYearsForSelector} from './calendar.util';
-import {map, take} from 'rxjs/operators';
-import {TaskService} from '../_service/task.service';
-import {repeatabilityList, Task} from '../_models/calendar/task.model';
-import {Subject} from 'rxjs';
+import {getDefaultMonth, getDefaultYear, getYearsForSelector} from './calendar.util';
 
 @Component({
   selector: 'app-calendar',
@@ -15,7 +8,6 @@ import {Subject} from 'rxjs';
   styleUrls: ['./calendar.component.css'],
 })
 export class CalendarComponent implements OnInit {
-  updateCalendarEvent = new Subject<void>();
 
   selectedMonth: Month;
   monthsList: Month[] = months;
@@ -33,13 +25,5 @@ export class CalendarComponent implements OnInit {
     this.selectedYear = getDefaultYear();
     this.selectedMonth = months[getDefaultMonth()];
     this.years = getYearsForSelector(this.selectedYear);
-  }
-
-  onSelectMonth() {
-    this.updateCalendarEvent.next();
-  }
-
-  onSelectYear() {
-    this.updateCalendarEvent.next();
   }
 }

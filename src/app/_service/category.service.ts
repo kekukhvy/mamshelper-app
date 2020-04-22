@@ -58,11 +58,11 @@ export class CategoryService {
     this.categoriesUpdated.next(categories);
   }
 
-  private getCategoryIndexById(categoryId): number {
+  public getCategoryIndexById(categoryId): number {
     return this.categories.findIndex((c) => c.id === categoryId);
   }
 
-  private getCategoryById(categoryId): Category {
+  public getCategoryById(categoryId): Category {
     return this.categories[this.getCategoryIndexById(categoryId)];
   }
 }

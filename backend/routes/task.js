@@ -4,16 +4,16 @@ const Task = require("../models/task");
 
 router.get("", (req, res, next) => {
   Task.find().then((documents) => {
-    res.status(200).json({ tasks: documents });
+    res.status(200).json({tasks: documents});
   });
 });
 
 router.get("/date/:date", (req, res, next) => {
   Task.find({
-    startDate: { $lte: new Date(req.params.date) },
-    endDate: { $gte: new Date(req.params.date) },
+    startDate: {$lte: new Date(req.params.date)},
+    endDate: {$gte: new Date(req.params.date)},
   }).then((documents) => {
-    res.status(200).json({ tasks: documents });
+    res.status(200).json({tasks: documents});
   });
 });
 
@@ -25,15 +25,15 @@ router.get("/month/:date", (req, res, next) => {
   Task.find({
     $or: [
       {
-        startDate: { $lte: firstDate },
-        endDate: { $gte: firstDate },
+        startDate: {$lte: firstDate},
+        endDate: {$gte: firstDate},
       },
       {
-        startDate: { $lte: lastDate, $gte: firstDate },
+        startDate: {$lte: lastDate, $gte: firstDate},
       },
     ],
   }).then((documents) => {
-    res.status(200).json({ tasks: documents });
+    res.status(200).json({tasks: documents});
   });
 });
 
@@ -48,13 +48,13 @@ router.post("", (req, res, next) => {
     category: req.body.category,
   });
   task.save().then((createdTask) => {
-    res.status(201).json({ taskId: createdTask._id });
+    res.status(201).json({taskId: createdTask._id});
   });
 });
 
 router.delete("/:id", (req, res, next) => {
-  Task.deleteOne({ _id: req.params.id }).then((result) => {
-    res.status(200).json({ message: "Task was deleted" });
+  Task.deleteOne({_id: req.params.id}).then((result) => {
+    res.status(200).json({message: "Task was deleted"});
   });
 });
 
