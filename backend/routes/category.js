@@ -33,7 +33,6 @@ router.put("/:id", (req, res, next) => {
     isHidden: req.body.isHidden,
   });
   Category.updateOne({ _id: req.params.id }, category).then((result) => {
-    console.log(result);
     res.status(200).json({ message: "Updated successfully" });
   });
 });

@@ -7,7 +7,7 @@
           [ngClass]="{ 'text-gray': day.date.getMonth() !== selectedMonth.id }"
         >
           <div class="day-name">
-            {{ day.date.toLocaleString("ru-ru", { weekday: "long" }) }}
+            {{ day.date.toLocaleString("ru-ru", {weekday: "long"}) }}
           </div>
           <div class="day-number" [ngClass]="{ circle: day.currentDate }">
             {{ day.date.getDate() }}

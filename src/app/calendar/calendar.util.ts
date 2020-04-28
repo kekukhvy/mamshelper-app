@@ -36,3 +36,9 @@ export const getFirstDateOfMonthISO = (month: number, year: number): string => {
   const date = new Date(year, month,2);
   return date.toISOString().slice(0, 10);
 };
+
+export const localizeDateStr = (dateToConvertStr, timeZoneOffset:number):Date =>  {
+  const dateToConvert = new Date(dateToConvertStr);
+  dateToConvert.setHours(dateToConvert.getHours() + (timeZoneOffset / 60));
+  return dateToConvert;
+}

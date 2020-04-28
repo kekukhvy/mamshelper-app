@@ -52,6 +52,22 @@ router.post("", (req, res, next) => {
   });
 });
 
+router.put("", (req, res, next) => {
+  const task = new Task({
+    _id: req.body.id,
+    name: req.body.name,
+    description: req.body.description,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
+    time: req.body.time,
+    repeatability: req.body.repeatability,
+    category: req.body.category,
+  });
+  Task.updateOne({_id: req.body.id}, task).then((createdTask) => {
+    res.status(200).json({message: "Task was updated"});
+  });
+});
+
 router.delete("/:id", (req, res, next) => {
   Task.deleteOne({_id: req.params.id}).then((result) => {
     res.status(200).json({message: "Task was deleted"});

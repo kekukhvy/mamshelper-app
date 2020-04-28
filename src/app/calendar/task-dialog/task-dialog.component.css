@@ -2,11 +2,15 @@
   width: 100%;
 }
 
-.task-date {
+.task-start-date {
   width: 50%;
   margin-right: 20px;
 }
 
+.task-end-date{
+  width: 40%;
+  margin-left: 20px;
+}
 .task-time {
   width: 40%;
 }

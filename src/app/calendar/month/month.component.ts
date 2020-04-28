@@ -7,9 +7,10 @@ import {TaskDialogComponent} from '../task-dialog/task-dialog.component';
 import {Category} from 'src/app/_models/calendar/category.model';
 import {getFirstDateOfMonthISO, getLastDateOfMonth, isCurrentDate} from '../calendar.util';
 import {CategoryService} from '../../_service/category.service';
-import {Subscription} from 'rxjs';
 import {TaskService} from '../../_service/task.service';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-month',
@@ -22,10 +23,11 @@ export class MonthComponent implements OnInit, OnDestroy, OnChanges {
   @Input() selectedYear: number;
 
   private categorySub: Subscription;
+  private taskSub: Subscription;
 
-  private tasks: Task[];
   private categories: Category[] = [];
   private lastDayOfMonth: number = 0;
+  private isFirstInit = true;
 
   public days: Day[] = [];
 
@@ -35,31 +37,59 @@ export class MonthComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    this.getCategories();
+    this.initCategoriesAndCalendar();
+    this.taskSub = this.taskService.getTaskUpdatedListener()
+      .subscribe(() => {
+        this.generateCalendar();
+      });
+    this.isFirstInit = false;
   }
 
   ngOnDestroy(): void {
     this.categorySub.unsubscribe();
+    this.taskSub.unsubscribe();
   };
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.generateCalendar();
+    if (!this.isFirstInit) {
+      this.generateCalendar();
+    }
   }
 
 
-  private getCategories() {
+  private initCategoriesAndCalendar() {
     this.categorySub = this.categoryService.getCategoryUpdatedListener()
+      .pipe(take(1))
       .subscribe(categories => {
         this.categories = categories;
-        this.getTasks();
-        console.log('Categories was updated');
+        this.generateCalendar();
       });
   }
 
-  private getTasks() {
+  private generateCalendar() {
+    this.lastDayOfMonth = getLastDateOfMonth(this.selectedMonth.id, this.selectedYear);
+    this.days = [];
+    this.generatePreviousMonth();
+    this.generateMonthWithTasks();
+  }
+
+  private generatePreviousMonth() {
+    const firstDate = new Date(this.selectedYear, this.selectedMonth.id, 1);
+    const shift: number = firstDate.getDay() === 0 ? 6 : firstDate.getDay() - 1;
+    if (firstDate.getDay() !== 1) {
+      for (let i = shift; i > 0; i--) {
+        const date = new Date(firstDate);
+        date.setDate(date.getDate() - i);
+        this.days.push(this.generateDayOfPreviousMonth(date));
+      }
+    }
+  }
+
+  private generateMonthWithTasks() {
     const firstDateOfMonth = getFirstDateOfMonthISO(this.selectedMonth.id, this.selectedYear);
     this.taskService.getTasksForMonth(firstDateOfMonth)
       .pipe(
+        take(1),
         map((tasksData) => {
           return tasksData.tasks.map((task) => {
             return {
@@ -73,49 +103,23 @@ export class MonthComponent implements OnInit, OnDestroy, OnChanges {
               category: this.categoryService.getCategoryById(task.category)
             };
           });
-        })).subscribe(result => {
-      this.tasks = result;
-      console.log('tasks was updated', this.tasks);
-    });
+        }))
+      .subscribe(result => {
+        this.taskService.setLoadedTasks(result);
+        this.generateMonth();
+      });
   }
 
-  generateCalendar() {
-    this.lastDayOfMonth = getLastDateOfMonth(this.selectedMonth.id, this.selectedYear);
-    this.days = [];
-    this.generatePreviousMonth();
-    this.generateMonth();
-  }
-
-  generatePreviousMonth() {
-    const firstDate = new Date(this.selectedYear, this.selectedMonth.id, 1);
-    const shift: number = firstDate.getDay() === 0 ? 6 : firstDate.getDay() - 1;
-    if (firstDate.getDay() !== 1) {
-      for (let i = shift; i > 0; i--) {
-        const date = new Date(firstDate);
-        date.setDate(date.getDate() - i);
-        this.days.push(this.generateDayOfPreviousMonth(date));
-      }
-    }
-  }
-
-  generateMonth() {
+  private generateMonth() {
     for (let i = 1; i <= this.lastDayOfMonth; i++) {
       let day: Day = this.generateDay(i);
       this.days.push(day);
     }
   }
 
-  generateDayOfPreviousMonth(date: Date): Day {
-    return {
-      date: date,
-      currentDate: false,
-      tasks: null,
-    };
-  }
-
-  generateDay(num): Day {
+  private generateDay(num): Day {
     const date: Date = new Date(this.selectedYear, this.selectedMonth.id, num);
-    const tasks: Task[] = null; //this.taskService.getDayTasks(date);
+    const tasks: Task[] = this.taskService.getTasksPerDay(date);
     return {
       date: date,
       currentDate: isCurrentDate(date),
@@ -123,6 +127,13 @@ export class MonthComponent implements OnInit, OnDestroy, OnChanges {
     };
   }
 
+  private generateDayOfPreviousMonth(date: Date): Day {
+    return {
+      date: date,
+      currentDate: false,
+      tasks: null,
+    };
+  }
 
   openTask(task: Task) {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
@@ -132,8 +143,39 @@ export class MonthComponent implements OnInit, OnDestroy, OnChanges {
       autoFocus: false,
     });
 
+    dialogRef.componentInstance
+      .deleteTaskEvent
+      .pipe(
+        take(1)
+      )
+      .subscribe(taskId => {
+        this.deleteTask(taskId);
+      });
+
     dialogRef.afterClosed().subscribe((result) => {
-      //this.taskService.saveTask(result);
+      if (result) {
+        this.taskService.updateTask(result)
+          .subscribe(() => {
+            this.taskService.notifyUpdatedTask();
+          });
+      }
     });
+  }
+
+  deleteTask(taskId: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: {message: 'Are you sure that you want to delete task?'},
+    });
+
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.taskService.deleteTask(taskId)
+            .subscribe(result => {
+              this.taskService.notifyUpdatedTask();
+            });
+        }
+      });
   }
 }

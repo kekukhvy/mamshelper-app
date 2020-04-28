@@ -55,7 +55,7 @@ export class CategoryService {
 
   public setLoadedCategories(categories: Category[]) {
     this.categories = categories;
-    this.categoriesUpdated.next(categories);
+    this.categoriesUpdated.next([...categories]);
   }
 
   public getCategoryIndexById(categoryId): number {
@@ -64,5 +64,9 @@ export class CategoryService {
 
   public getCategoryById(categoryId): Category {
     return this.categories[this.getCategoryIndexById(categoryId)];
+  }
+
+  public getLoadedCategories(): Category[] {
+    return [...this.categories];
   }
 }

@@ -1,5 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="end center">
-  <button mat-icon-button color="accent" aria-label="Delete" *ngIf="!isEdit">
+  <button mat-icon-button color="accent" aria-label="Delete" *ngIf="!isEdit&&!isNew"
+          (click)="onDeleteTask()">
     <mat-icon>delete</mat-icon>
   </button>
 
@@ -8,7 +9,7 @@
     color="primary"
     aria-label="Edit"
     (click)="onEdit()"
-    *ngIf="!isEdit"
+    *ngIf="!isEdit && !isNew"
   >
     <mat-icon>edit</mat-icon>
   </button>
@@ -23,17 +24,16 @@
       formControlName="name"
       matInput
       placeholder="Name"
-      type="text"
-      [disabled]="!isEdit"
-  /></mat-form-field>
+      type="text"/>
+  </mat-form-field>
 
-  <mat-form-field class="task-date">
-    <input formControlName="date" matInput placeholder="Date" type="date"
-  /></mat-form-field>
+  <mat-form-field class="task-start-date">
+    <input formControlName="startDate" matInput placeholder="Date" type="date"
+    /></mat-form-field>
 
   <mat-form-field class="task-time">
     <input formControlName="time" matInput placeholder="Time" type="time"
-  /></mat-form-field>
+    /></mat-form-field>
   <mat-form-field>
     <select
       matNativeControl
@@ -48,16 +48,19 @@
       </option>
     </select>
   </mat-form-field>
+  <mat-form-field class="task-end-date"
+                  *ngIf="isRepeatableTask">
+    <input formControlName="endDate" matInput placeholder="Date" type="date">
+  </mat-form-field>
   <mat-form-field>
     <select
       matNativeControl
-      required
       formControlName="category"
       placeholder="Category"
     >
       <option *ngFor="let category of categories" [ngValue]="category">{{
         category.name
-      }}</option>
+        }}</option>
     </select>
   </mat-form-field>
   <mat-form-field class="task-description" appearance="fill">
@@ -71,7 +74,7 @@
   </mat-form-field>
 
   <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-evenly center">
-    <button mat-button (click)="onSave()" color="primary" *ngIf="isEdit">
+    <button mat-button (click)="onSave()" color="primary" *ngIf="isEdit|| isNew">
       Save
     </button>
   </div>
